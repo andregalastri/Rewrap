@@ -1,15 +1,17 @@
-name: Build VSIX
+name: Validate and package Rewrap
 
 on:
-  workflow_dispatch:
+  workflow_call:
   push:
+    branches: [stable]
   pull_request:
+    branches: [stable]
 
 permissions:
   contents: read
 
 concurrency:
-  group: vsix-${{ github.ref }}
+  group: vsix-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

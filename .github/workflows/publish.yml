@@ -1,0 +1,11 @@
+name: Package personal VSIX
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    uses: ./.github/workflows/main.yml

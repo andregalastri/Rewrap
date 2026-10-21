@@ -28,7 +28,7 @@ The force command has no default shortcut. For example, add this entry to
 
 ## Build and install from GitHub
 
-1. Open **Actions > Build VSIX > Run workflow** and select the `stable` branch.
+1. Open **Actions > Package personal VSIX > Run workflow** and select the `stable` branch.
    If GitHub displays an Actions enablement notice for this fork, enable workflows
    first.
 2. After the run succeeds, download **Rewrap-VSCode** under **Artifacts** on the
@@ -37,7 +37,7 @@ The force command has no default shortcut. For example, add this entry to
    file. Disable the original `stkb.rewrap` extension so both extensions do not
    register the same commands and shortcuts. Reload VS Code if prompted.
 
-The workflow also builds on pushes and pull requests. It typechecks, lints,
+The shared build workflow also runs on pushes and pull requests to `stable`. It typechecks, lints,
 runs the core and forced-wrap regression tests, builds the extension, runs VS
 Code integration tests, and uploads a VSIX. It does not publish to a marketplace
 and requires no publishing token. Artifacts are retained for 30 days.
