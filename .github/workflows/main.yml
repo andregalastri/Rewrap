@@ -8,6 +8,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: vsix-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-22.04
@@ -35,6 +39,12 @@ jobs:
 
       - name: Install extension dependencies
         run: npm ci --prefix vscode
+
+      - name: Restore Fable tool
+        run: dotnet tool restore
+
+      - name: Restore .NET dependencies
+        run: dotnet restore core/Core.Test.fsproj
 
       - name: Build, test and package
         run: sh ./do package --verbose
