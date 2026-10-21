@@ -46,8 +46,40 @@ jobs:
       - name: Restore .NET dependencies
         run: dotnet restore core/Core.Test.fsproj
 
-      - name: Build, test and package
-        run: sh ./do package --verbose
+      - name: Compile F# to JavaScript
+        run: dotnet fable core/Core.Test.fsproj -o core/dist/dev --noRestore
+
+      - name: Bundle core
+        run: npx --no-install parcel build core --cache-dir .obj/parcel
+
+      - name: Bundle core tests
+        run: npx --no-install parcel build core/test --cache-dir .obj/parcel
+
+      - name: Test core
+        run: node core/test/prod.js
+
+      - name: Test forced wrapping
+        run: node core/test/force.mjs
+
+      - name: Typecheck extension
+        run: npx --no-install tsc -p vscode --noEmit
+
+      - name: Lint extension
+        run: npx --no-install eslint vscode --ext .ts
+
+      - name: Bundle extension
+        run: npx --no-install parcel build vscode --no-source-maps --cache-dir .obj/parcel
+
+      - name: Prepare extension README
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs'
+          fs.writeFileSync('vscode/README.md', fs.readFileSync('README.md', 'utf8').replaceAll('.svg', '.png'))
+          JS
+
+      - name: Package VSIX
+        working-directory: vscode
+        run: npx --no-install vsce package -o ../.obj/Rewrap-VSCode.vsix
 
       - name: Test VS Code commands
         run: xvfb-run -a node vscode.test/run.cjs
