@@ -275,7 +275,7 @@ let main argv =
   let argv = Array.map norm argv
   let inArgv (f: string) = argv |> Array.exists (fun a -> f.EndsWith (a))
   let filesToTest =
-    Native.files |> Seq.map norm |> if Array.isEmpty argv then id else Seq.filter inArgv
+    Native.files |> Seq.ofArray |> if Array.isEmpty argv then id else Seq.filter (norm >> inArgv)
 
   let processTest (acc: Results) = function
     | Ok (test, maybeReformatTest) ->
