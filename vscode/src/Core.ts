@@ -53,4 +53,8 @@ export const rewrap:
    selections: readonly Selection[], docLine: (i:number) => string) => Edit =
   Main.rewrap
 
+export const rewrapForced:
+  (settings: Settings, selections: readonly Selection[], docLine: (i:number) => string) => Edit =
+  Main.rewrapForced
+
 export const saveDocState: (docState: DocState) => void = Main.saveDocState

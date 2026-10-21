@@ -1,4 +1,4 @@
-import {DocState, maybeChangeWrappingColumn, rewrap, saveDocState} from './Core'
+import {DocState, maybeChangeWrappingColumn, rewrap, rewrapForced, saveDocState} from './Core'
 import {applyEdit, catchErr, docType, docLine} from './Common'
 import {TextEditor, commands, window} from 'vscode'
 import {getCoreSettings} from './Settings'
@@ -13,6 +13,7 @@ async function activate(context) {
     // Register the commands
     context.subscriptions.push
         ( commands.registerTextEditorCommand('rewrap.rewrapComment', rewrapCommentCommand)
+        , commands.registerTextEditorCommand('rewrap.forceRewrap', forceRewrapCommand)
         , commands.registerTextEditorCommand('rewrap.rewrapCommentAt', rewrapCommentAtCommand)
         , commands.registerTextEditorCommand('rewrap.toggleAutoWrap', autoWrap.editorToggle)
         )
@@ -20,7 +21,13 @@ async function activate(context) {
     /** Standard rewrap command */
     function rewrapCommentCommand(editor)
     {
-        doWrap(editor).then(() => saveDocState(getDocState(editor)))
+        return doWrap(editor).then(() => saveDocState(getDocState(editor)))
+    }
+
+    /** Explicitly wrap any text, including Markdown code blocks and code. */
+    function forceRewrapCommand(editor)
+    {
+        return doWrap(editor, undefined, true).then(() => saveDocState(getDocState(editor)))
     }
 
     let customWrappingColumn = 0;
@@ -55,7 +62,7 @@ const getDocState = (editor: TextEditor) : DocState => {
  *  is applied, returns an updated DocState object, else returns null.
  *  Takes an optional customColumn to wrap at.
  */
-const doWrap = (editor, customColumn?) => {
+const doWrap = (editor, customColumn?, force = false) => {
     const doc = editor.document
     try {
         const docState = getDocState(editor)
@@ -64,8 +71,10 @@ const doWrap = (editor, customColumn?) => {
         let settings = getCoreSettings(editor, toCol)
         const selections = editor.selections
 
-        const edit = rewrap(docType(doc), settings, selections, docLine(doc))
+        const edit = force
+            ? rewrapForced(settings, selections, docLine(doc))
+            : rewrap(docType(doc), settings, selections, docLine(doc))
         return applyEdit(editor, edit).then(null, catchErr)
     }
-    catch(err) { catchErr(err) }
+    catch(err) { catchErr(err); return Promise.resolve() }
 }

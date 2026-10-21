@@ -1,6 +1,6 @@
 {
   "name": "rewrap",
-  "displayName": "Rewrap",
+  "displayName": "Rewrap (Galastri)",
   "description": "Hard word wrapping for comments and other text at a given column.",
   "keywords": [
     "word wrap",
@@ -12,16 +12,15 @@
     "paragraph",
     "multi-root ready"
   ],
-  "version": "1.16.3",
-  "publisher": "stkb",
+  "version": "1.16.4",
+  "publisher": "andregalastri",
   "icon": "logo.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stkb/Rewrap.git"
+    "url": "https://github.com/andregalastri/Rewrap.git"
   },
   "bugs": {
-    "url": "https://github.com/stkb/Rewrap/issues",
-    "email": "scsavtnk@gmail.com"
+    "url": "https://github.com/andregalastri/Rewrap/issues"
   },
   "license": "SEE LICENSE IN LICENSE",
   "engines": {
@@ -51,6 +50,10 @@
       {
         "command": "rewrap.rewrapComment",
         "title": "Rewrap Comment / Text"
+      },
+      {
+        "command": "rewrap.forceRewrap",
+        "title": "Rewrap: Force Rewrap as Plain Text"
       },
       {
         "command": "rewrap.rewrapCommentAt",

@@ -144,6 +144,7 @@ async function prepublish () {
 
 function package_ () {
   productionBuild ()
+  createVSCReadme ()
   const pre = Version.fromVSC().isStable ? "" : "--pre-release"
   run ("Creating VSIX", npx `vsce package ${pre} -o ../${vscodeVsix}`, {cwd:'./vscode'})
   log (`VSIX file created at ${vscodeVsix}`)
@@ -173,6 +174,7 @@ function runTests ({production} = {}) {
       run ("Bundling Core tests with Parcel", parcel `build core/test`)
     const msg = 'Core build complete. Running tests:'
     run (msg, `node core/test${production ? '/prod': ''}`, {showOutput: true})
+    run ("Testing forced wrapping", 'node core/test/force.mjs', {showOutput: true})
   }
 
   if (targetVSCode) {

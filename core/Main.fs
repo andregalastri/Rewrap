@@ -22,9 +22,7 @@ let languageNameForFile (file: File) : string =
 let languages : string[] =
     Seq.map Language.name Parsing.Documents.languages |> Seq.toArray
 
-/// The main rewrap function, to be called by clients
-let rewrap file settings selections (getLine: Func<int, string>) =
-    let processor = Parsing.Documents.select file
+let private rewrapWith (processor: DocumentProcessor) settings selections (getLine: Func<int, string>) =
     let mkLine i =
       getLine.Invoke(i) |> Option.ofObj |> Option.map (fun l -> (l,i+1))
     let strLines = Seq.unfold mkLine 0 |> Nonempty.fromSeqUnsafe // Can we get rid of this?
@@ -32,6 +30,14 @@ let rewrap file settings selections (getLine: Func<int, string>) =
     let ctx = Context(settings)
     processor ctx lines
     Selections.wrapSelected strLines selections ctx
+
+/// The main rewrap function, to be called by clients
+let rewrap file settings selections getLine =
+    rewrapWith (Parsing.Documents.select file) settings selections getLine
+
+/// Wrap any selected text, including code, without changing the file language.
+let rewrapForced settings selections getLine =
+    rewrapWith Parsing.Documents.forcedPlainText settings selections getLine
 
 
 let strWidth tabSize str = Line.strWidth tabSize str

@@ -24,6 +24,17 @@ let oldPlainText settings =
 
 let plainText : DocumentProcessor = toNewDocProcessor oldPlainText
 
+/// Plain text wrapping without language exclusions. Keep fence delimiter lines
+/// separate so wrapping a whole Markdown document cannot join them to prose.
+let forcedPlainText : DocumentProcessor =
+    let fence = Regex(@"^\s*(?:`{3,}[^`]*|~{3,}.*)$")
+    let fenceLine = ignoreParser (fun (Nonempty(head, tail)) ->
+        if fence.IsMatch(head) then
+            Some (Nonempty.singleton head, Nonempty.fromList tail)
+        else None)
+    toNewDocProcessor (fun settings ->
+        takeUntil fenceLine (oldPlainText settings) |> repeatToEnd)
+
 // For creating source code doc types
 let private sc comments = Parsing_SourceCode.sourceCode comments
 
