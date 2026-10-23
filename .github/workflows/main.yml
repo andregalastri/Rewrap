@@ -1,4 +1,4 @@
-name: Validate and package Rewrap
+name: Validate and package Galastri Rewrap
 
 on:
   workflow_call:
@@ -81,7 +81,7 @@ jobs:
 
       - name: Package VSIX
         working-directory: vscode
-        run: npx --no-install vsce package -o ../.obj/Rewrap-VSCode.vsix
+        run: npx --no-install vsce package -o ../.obj/galastri-rewrap.vsix
 
       - name: Test VS Code commands
         run: xvfb-run -a node vscode.test/run.cjs
@@ -89,7 +89,7 @@ jobs:
       - name: Upload VSIX
         uses: actions/upload-artifact@v4
         with:
-          name: Rewrap-VSCode
-          path: .obj/Rewrap-VSCode.vsix
+          name: galastri-rewrap-vsix
+          path: .obj/galastri-rewrap.vsix
           if-no-files-found: error
           retention-days: 30

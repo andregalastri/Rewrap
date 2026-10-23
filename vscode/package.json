@@ -1,6 +1,6 @@
 {
-  "name": "rewrap",
-  "displayName": "Rewrap (Galastri)",
+  "name": "galastri-rewrap",
+  "displayName": "Galastri Rewrap",
   "description": "Hard word wrapping for comments and other text at a given column.",
   "keywords": [
     "word wrap",
@@ -12,7 +12,7 @@
     "paragraph",
     "multi-root ready"
   ],
-  "version": "1.16.4",
+  "version": "1.16.5",
   "publisher": "andregalastri",
   "icon": "logo.png",
   "repository": {
@@ -65,7 +65,7 @@
       }
     ],
     "configuration": {
-      "title": "Rewrap",
+      "title": "Galastri Rewrap",
       "properties": {
         "rewrap.wrappingColumn": {
           "scope": "language-overridable",
